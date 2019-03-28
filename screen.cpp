@@ -38,12 +38,10 @@ int main() {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_SetVideoMode(s_width, s_height, 32, S_FLAGS);
 
-	// init
+	// init font
 	SDL_Surface* bmp = SDL_LoadBMP("ansi81.bmp");
-	SDL_Surface* bmp2 = SDL_ConvertSurface(bmp, SDL_GetVideoSurface()->format, 0);
+	font = SDL_ConvertSurface(bmp, SDL_GetVideoSurface()->format, 0);
 	SDL_FreeSurface(bmp);
-	font = bmp2;
-	// printf("surface: %x %x\n", bmp2->format->Rmask, bmp2->format->Amask);
 
 	int r = mainloop();
 
@@ -99,6 +97,7 @@ int mainloop() {
 			vprint(SDL_GetVideoSurface(), 100, 100, "Hello World!");
 
 			scaleto(font, SDL_GetVideoSurface(), 3);
+
 			SDL_Flip(SDL_GetVideoSurface());
 		}
 		SDL_Delay(16);
@@ -135,4 +134,4 @@ void scaleto(SDL_Surface* src, SDL_Surface* dst, int factor) {
 }
 
 
-} // end gfx
+} // end namespace

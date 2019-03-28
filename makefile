@@ -1,7 +1,7 @@
 # GCC_OPTS=-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic
 SDL = C:/MinGW64/devlibs/SDL-1.2.15
 OUT = main.exe
-SRC = main.cpp screen.cpp
+SRC = main.cpp screen.cpp widgets.cpp
 HEAD = global.h
 
 $(OUT): $(SRC) $(HEAD)
