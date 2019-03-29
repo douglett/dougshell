@@ -2,7 +2,7 @@
 SDL = C:/MinGW64/devlibs/SDL-1.2.15
 OUT = main.exe
 SRC = main.cpp screen.cpp widgets.cpp
-HEAD = global.h
+HEAD = global.h widgets_surface.hpp widgets_widget.hpp
 
 $(OUT): $(SRC) $(HEAD)
 	g++ -std=c++14 -Wall -m32 -o $(OUT) \

@@ -33,7 +33,7 @@ static Uint16 s_width = 640, s_height = 480;
 static SDL_Surface* font = NULL;
 
 
-int main() {
+int begin() {
 	setbuf(stdout, NULL); // stop buffering stdout. solves some windows printf issues
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_SetVideoMode(s_width, s_height, 32, S_FLAGS);
@@ -42,11 +42,12 @@ int main() {
 	SDL_Surface* bmp = SDL_LoadBMP("ansi81.bmp");
 	font = SDL_ConvertSurface(bmp, SDL_GetVideoSurface()->format, 0);
 	SDL_FreeSurface(bmp);
+	return 0;
+}
 
-	int r = mainloop();
-
+int quit() {
 	SDL_Quit();
-	return r;
+	return 0;
 }
 
 
@@ -84,6 +85,9 @@ int mainloop() {
 			default:
 				printf("> 0x%02x :: %s\n", e.type, events.at(e.type).c_str());
 		}
+
+		// garbage collect loose widgets
+		if (Widgets::gc()) dopaint = 1;
 
 		// repaint screen if requested
 		if (dopaint) {
