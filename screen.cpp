@@ -5,7 +5,7 @@
 using namespace std;
 
 
-namespace screen {
+namespace Screen {
 
 // public vars
 // SDL event helper
@@ -89,15 +89,17 @@ int mainloop() {
 		if (dopaint) {
 			dopaint = 0;
 			printf("paint...\n");
+			// cls
 			SDL_Rect r = { 0, 0, s_width, s_height };
-			SDL_FillRect(SDL_GetVideoSurface(), &r, 0x0);
-
+			SDL_FillRect(SDL_GetVideoSurface(), NULL, 0x0);
+			// test
 			r = { 10, 10, 0, 0 };
 			SDL_BlitSurface(font, NULL, SDL_GetVideoSurface(), &r);
 			vprint(SDL_GetVideoSurface(), 100, 100, "Hello World!");
-
 			scaleto(font, SDL_GetVideoSurface(), 3);
-
+			// paint widgets
+			Widgets::paint();
+			// flip screen
 			SDL_Flip(SDL_GetVideoSurface());
 		}
 		SDL_Delay(16);
