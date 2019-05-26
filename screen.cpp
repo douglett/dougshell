@@ -86,23 +86,17 @@ int mainloop() {
 				printf("> 0x%02x :: %s\n", e.type, events.at(e.type).c_str());
 		}
 
-		// garbage collect loose widgets
-		if (Widgets::gc()) dopaint = 1;
-
 		// repaint screen if requested
 		if (dopaint) {
 			dopaint = 0;
 			printf("paint...\n");
 			// cls
-			SDL_Rect r = { 0, 0, s_width, s_height };
 			SDL_FillRect(SDL_GetVideoSurface(), NULL, 0x0);
+			
 			// test
-			r = { 10, 10, 0, 0 };
-			SDL_BlitSurface(font, NULL, SDL_GetVideoSurface(), &r);
-			vprint(SDL_GetVideoSurface(), 100, 100, "Hello World!");
-			scaleto(font, SDL_GetVideoSurface(), 3);
-			// paint widgets
-			Widgets::paint();
+			// SDL_Rect r = { 0, 0, s_width, s_height };
+			vprint(SDL_GetVideoSurface(), 10, 10, "hello world");
+			
 			// flip screen
 			SDL_Flip(SDL_GetVideoSurface());
 		}
@@ -122,21 +116,6 @@ void vprint(SDL_Surface* dst, int x, int y, const std::string& s) {
 		SDL_BlitSurface(font, &sr, dst, &dr);
 		dr.x += 5;
 	}
-}
-
-
-void scaleto(SDL_Surface* src, SDL_Surface* dst, int factor) {
-	assert(src && dst && factor > 0); // sanity check
-	// printf("scale: %d %d\n", dst->w, dst->pitch);
-	SDL_Rect r = { 0, 0, uint16_t(factor), uint16_t(factor) };
-	uint32_t* px = (uint32_t*)src->pixels;
-	// do scale
-	for (int y = src->h-1; y >= 0; y--)
-	if (y*factor < dst->h)
-	for (int x = src->w-1; x >= 0; x--)
-	if (x*factor < dst->w) 
-		r.x = x*factor, r.y = y*factor,
-		SDL_FillRect(dst, &r, px[y * src->w + x]);
 }
 
 
