@@ -27,7 +27,8 @@ public:
 		{ SDL_SYSWMEVENT,       "SDL_SYSWMEVENT" },
 	};
 	// static vars
-	const int S_FLAGS = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
+	// const int S_FLAGS = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
+	const int S_FLAGS = SDL_SWSURFACE | SDL_RESIZABLE;
 
 // useful private vars
 private:
@@ -101,15 +102,12 @@ public:
 			// default:
 			// 	printf("> 0x%02x :: %s\n", e.type, events.at(e.type).c_str());
 		}
-
 		// repaint screen
 		SDL_FillRect(SDL_GetVideoSurface(), NULL, 0x0);
-		// paint canvas to backbuffer
-		memcpy( vbuffer->pixels, &buf.buf[0], s_width*s_height*4 );
-		SDL_BlitSurface(vbuffer, NULL, SDL_GetVideoSurface(), NULL);
-		// flip screen
-		SDL_Flip(SDL_GetVideoSurface());
-		SDL_Delay(16);
+		memcpy( vbuffer->pixels, &buf.buf[0], s_width*s_height*4 ); // paint canvas to backbuffer
+		SDL_BlitSurface(vbuffer, NULL, SDL_GetVideoSurface(), NULL); // flip backbuffer to screen
+		SDL_Flip(SDL_GetVideoSurface()); // flip screen
+		SDL_Delay(16); // wait 1 frame
 
 		return doquit;
 	}
