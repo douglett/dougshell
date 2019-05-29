@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <cassert>
 
 class Canvas {
 public:
@@ -14,11 +15,20 @@ public:
 	std::string id;
 
 	// init
-	Canvas() : buf(w*h, 0) { }
+	Canvas() {
+		resize(w, h);
+	}
 	Canvas(int w, int h) {
-		if (w >= MIN_W && w <= MAX_W) this->w = int(w/2)*2;
-		if (h >= MIN_W && h <= MAX_W) this->h = int(h/2)*2;
-		buf = std::vector<uint32_t>(this->w*this->h, 0);
+		resize(w, h);
+	}
+	int resize(int w, int h) {
+		// restrict size: multiples of 2, between MIN_W & max_W
+		// this->w = int((w < MIN_W ? MIN_W : w > MAX_W ? MAX_W : w) / 2) * 2;
+		// this->h = int((h < MIN_W ? MIN_W : h > MAX_W ? MAX_W : h) / 2) * 2;
+		assert(w > 0 && h > 0);
+		this->w = w, this->h = h;
+		buf = std::vector<uint32_t>(this->w * this->h, 0);
+		return 0;
 	}
 
 	// basic painting
