@@ -3,12 +3,13 @@
 #include <vector>
 #include <cstdint>
 #include <cassert>
+#include <algorithm>
 
 class Canvas {
 public:
-	static const int 
-		MIN_W = 2,
-		MAX_W = 1024;
+	// static const int 
+	// 	MIN_W = 2,
+	// 	MAX_W = 1024;
 
 	int w = 64, h = 64;
 	std::vector<uint32_t> buf;
@@ -22,11 +23,7 @@ public:
 		resize(w, h);
 	}
 	int resize(int w, int h) {
-		// restrict size: multiples of 2, between MIN_W & max_W
-		// this->w = int((w < MIN_W ? MIN_W : w > MAX_W ? MAX_W : w) / 2) * 2;
-		// this->h = int((h < MIN_W ? MIN_W : h > MAX_W ? MAX_W : h) / 2) * 2;
-		assert(w > 0 && h > 0);
-		this->w = w, this->h = h;
+		this->w = std::max(w, 0), this->h = std::max(h, 0);
 		buf = std::vector<uint32_t>(this->w * this->h, 0);
 		return 0;
 	}
@@ -41,6 +38,19 @@ public:
 		for (int i = ry; i < ry+rh; i++)
 		for (int j = rx; j < rx+rw; j++)
 			px(j, i, col);
+		return 0;
+	}
+	uint32_t peek(int x, int y) const {
+		if (x >= 0 && x < w && y >= 0 && y < h)
+			return buf[y * w + x];
+		return 0;
+	}
+
+	// copying
+	int blit(int x, int y, const Canvas& c) {
+		for (int yy = 0; yy < c.h; yy++)
+		for (int xx = 0; xx < c.w; xx++)
+			px(x + xx, y + yy, c.peek(xx, yy));
 		return 0;
 	}
 };

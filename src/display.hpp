@@ -28,11 +28,13 @@ public:
 	};
 	// static vars
 	const int S_FLAGS = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
+
+// useful private vars
 private:
 	Uint16 s_width = 640, s_height = 480;
 	SDL_Surface *vbuffer = NULL;
 
-
+// main interfact
 public:
 	Canvas buf;
 
@@ -40,25 +42,10 @@ public:
 		setbuf(stdout, NULL); // stop buffering stdout. solves some windows printf issues
 		SDL_Init(SDL_INIT_VIDEO);
 		resizeScreen(s_width, s_height);
-		// // init font
-		// SDL_Surface* bmp = SDL_LoadBMP("ansi81.bmp");
-		// font = SDL_ConvertSurface(bmp, SDL_GetVideoSurface()->format, 0);
-		// SDL_FreeSurface(bmp);
 		return 0;
 	}
 	int quit() {
 		SDL_Quit();
-		return 0;
-	}
-	// static members
-	int resizeScreen(int w, int h) {
-		// s_width = int(w / 2) * 2;
-		// s_height = int(h / 2) * 2;
-		s_width = w, s_height = h;
-		SDL_SetVideoMode(s_width, s_height, 32, S_FLAGS);
-		buf.resize(s_width, s_height);
-		SDL_FreeSurface(vbuffer);
-		vbuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, s_width, s_height, 32, 0xff000000, 0xff0000, 0xff00, 0xff);
 		return 0;
 	}
 
@@ -73,7 +60,7 @@ public:
 		memcpy( &c.buf[0], bmp2->pixels, bmp2->w * bmp2->h * 4 );
 		SDL_FreeSurface(bmp);
 		SDL_FreeSurface(bmp2);
-		return Canvas();
+		return c;
 	}
 
 	int mainloop() {
@@ -111,23 +98,32 @@ public:
 			case SDL_MOUSEMOTION:
 				break;
 			// show unhandled
-			default:
-				// printf("> 0x%02x :: %s\n", e.type, events.at(e.type).c_str());
-				;
+			// default:
+			// 	printf("> 0x%02x :: %s\n", e.type, events.at(e.type).c_str());
 		}
 
 		// repaint screen
 		SDL_FillRect(SDL_GetVideoSurface(), NULL, 0x0);
 		// paint canvas to backbuffer
-		uint32_t* px = (uint32_t*) vbuffer->pixels;
-		for (int i = 0; i < s_width * s_height; i++)
-			px[i] = buf.buf[i];
+		memcpy( vbuffer->pixels, &buf.buf[0], s_width*s_height*4 );
 		SDL_BlitSurface(vbuffer, NULL, SDL_GetVideoSurface(), NULL);
 		// flip screen
 		SDL_Flip(SDL_GetVideoSurface());
 		SDL_Delay(16);
 
 		return doquit;
+	}
+
+
+// helpers
+private:
+	int resizeScreen(int w, int h) {
+		s_width = w, s_height = h;
+		SDL_SetVideoMode(s_width, s_height, 32, S_FLAGS);
+		buf.resize(s_width, s_height);
+		SDL_FreeSurface(vbuffer);
+		vbuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, s_width, s_height, 32, 0xff000000, 0xff0000, 0xff00, 0xff);
+		return 0;
 	}
 
 };
